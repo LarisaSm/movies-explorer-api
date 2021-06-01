@@ -50,7 +50,7 @@ exports.createMovie = (req, res, next) => {
 };
 
 exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.cardId)
+  Movie.findById(req.params.movieId)
     .then((movie) => {
       if (!movie) {
         throw new NotFoundError('Фильма с таким id не существует');

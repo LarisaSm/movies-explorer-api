@@ -68,7 +68,6 @@ exports.pageNotFound = () => {
 
 exports.login = (req, res, next) => {
   const { email, password } = req.body;
-
   return User.findUserByCredentials(email, password)
     .then((user) => {
       // аутентификация успешна! пользователь в переменной user

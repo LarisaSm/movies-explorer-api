@@ -72,4 +72,4 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-exports.Card = mongoose.model('movie', userSchema);
+exports.Movie = mongoose.model('movie', userSchema);

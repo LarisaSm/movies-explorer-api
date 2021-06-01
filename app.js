@@ -7,18 +7,19 @@ const mongoose = require('mongoose');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 
+const { BASE_URL, NODE_ENV } = process.env;
+
 const { PORT = 3000 } = process.env;
 
-const userRouter = require('./routes/users');
-const movieRouter = require('./routes/movies');
+const indexRouter = require('./routes/index');
 
-const { login, createUser, pageNotFound } = require('./controllers/users');
+const { login, createUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
 // подключаемся к серверу mongo
-mongoose.connect('mongodb://localhost:27017/filmsdb', {
+mongoose.connect(NODE_ENV === 'production' ? BASE_URL : 'mongodb://localhost:27017/filmsdb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -33,7 +34,12 @@ app.use(requestLogger); // подключаем логгер запросов
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     password: Joi.string().required().min(2).max(30),
-    email: Joi.string().email().required().min(2),
+    email: Joi.string().custom((value, helpers) => {
+      if (validator.isEmail(value)) {
+        return value;
+      }
+      return helpers.message('Некорректный формат почты');
+    }),
   }),
 }), login);
 
@@ -44,16 +50,18 @@ app.post('/signup', celebrate({
       if (validator.isEmail(value)) {
         return value;
       }
-      return helpers.message('Невалидная ссылка');
+      return helpers.message('Некорректный формат почты');
     }),
     name: Joi.string().min(2).max(30),
   }),
 }), createUser);
 
-app.use(userRouter);
-app.use(movieRouter);
+// app.use(userRouter);
+// app.use(movieRouter);
 
-app.use('*', pageNotFound);
+// app.use('*', pageNotFound);
+
+app.use(indexRouter);
 
 app.use(errorLogger); // подключаем логгер ошибок
 
