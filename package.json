@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
-    "start": "node app.js",
+    "start": "VAR=$(awk -F= '{printf $2}' .env) && if [ $VAR == \"production\" ]; then node app.js; else nodemon app.js; fi",
     "lint": "npx eslint"
   },
   "repository": {
