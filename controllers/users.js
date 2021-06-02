@@ -36,20 +36,39 @@ exports.updateUser = (req, res, next) => {
   if (name === undefined || email === undefined) {
     throw new ValidationError('Введены некорректные данные');
   }
-  User.findByIdAndUpdate(
-    req.user._id,
-    { name, email },
-    // Передадим объект опций:
-    {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-    },
-  )
+  // User.findByIdAndUpdate(
+  //   req.user._id,
+  //   { name, email },
+  //   // Передадим объект опций:
+  //   {
+  //     new: true, // обработчик then получит на вход обновлённую запись
+  //     runValidators: true, // данные будут валидированы перед изменением
+  //   },
+  // )
+
+  User.findById(req.user._id)
     .then((user) => {
+      if (user.email !== email) {
+        throw new ConflictError('Неверный емейл');
+      }
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
+      } else {
+        User.findByIdAndUpdate(
+          req.user._id,
+          { name, email },
+          // Передадим объект опций:
+          {
+            new: true, // обработчик then получит на вход обновлённую запись
+            runValidators: true, // данные будут валидированы перед изменением
+          },
+        ).then((userUpdate) => {
+          if (!userUpdate) {
+            throw new NotFoundError('Нет пользователя с таким id');
+          }
+          res.send(userUpdate);
+        });
       }
-      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -76,11 +95,7 @@ exports.login = (req, res, next) => {
       // вернём токен
       res.status(200).send({ token });
     })
-    .catch(() => {
-      // ошибка аутентификации
-      throw new UnauthorizedError('Ошибка авторизации');
-    })
-    .catch((err) => next(err));
+    .catch(() => next(new UnauthorizedError('Ошибка авторизации')));
 };
 
 exports.getUsersMe = (req, res, next) => {

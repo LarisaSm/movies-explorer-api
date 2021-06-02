@@ -50,13 +50,13 @@ exports.createMovie = (req, res, next) => {
 };
 
 exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.movieId)
+  Movie.findById(req.params.moviesId)
     .then((movie) => {
       if (!movie) {
         throw new NotFoundError('Фильма с таким id не существует');
       }
       if (movie.owner.toString() === req.user._id) {
-        Movie.findByIdAndRemove(req.params.movieId)
+        movie.remove()
           .then((movieDelete) => {
             if (!movieDelete) {
               throw new NotFoundError('Фильма с таким id не существует');

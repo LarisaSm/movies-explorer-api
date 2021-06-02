@@ -1,10 +1,8 @@
 // app.js — входной файл
 const express = require('express');
-// require('dotenv').config();
-// const cors = require('cors');
-const validator = require('validator');
+require('dotenv').config();
+const cors = require('cors');
 const mongoose = require('mongoose');
-const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 
 const { BASE_URL, NODE_ENV } = process.env;
@@ -13,7 +11,6 @@ const { PORT = 3000 } = process.env;
 
 const indexRouter = require('./routes/index');
 
-const { login, createUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
@@ -23,43 +20,15 @@ mongoose.connect(NODE_ENV === 'production' ? BASE_URL : 'mongodb://localhost:270
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
+  useUnifiedTopology: true,
 });
 
 // подключаем мидлвары, роуты и всё остальное...
 
 app.use(express.json());
+app.use(cors());
 
 app.use(requestLogger); // подключаем логгер запросов
-
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    password: Joi.string().required().min(2).max(30),
-    email: Joi.string().custom((value, helpers) => {
-      if (validator.isEmail(value)) {
-        return value;
-      }
-      return helpers.message('Некорректный формат почты');
-    }),
-  }),
-}), login);
-
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    password: Joi.string().required().min(2).max(30),
-    email: Joi.string().custom((value, helpers) => {
-      if (validator.isEmail(value)) {
-        return value;
-      }
-      return helpers.message('Некорректный формат почты');
-    }),
-    name: Joi.string().min(2).max(30),
-  }),
-}), createUser);
-
-// app.use(userRouter);
-// app.use(movieRouter);
-
-// app.use('*', pageNotFound);
 
 app.use(indexRouter);
 

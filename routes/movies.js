@@ -41,13 +41,13 @@ movieRouter.post('/movies', auth, celebrate({
       }
       return helpers.message('Невалидная ссылка');
     }),
-    movieId: Joi.string().hex().length(24),
+    movieId: Joi.number().required(),
   }),
 }), createMovie);
 
-movieRouter.delete('/movies/:movieId', auth, celebrate({
+movieRouter.delete('/movies/:moviesId', auth, celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().hex().length(24),
+    moviesId: Joi.string().hex().length(24),
   }),
 }), deleteMovie);
 
