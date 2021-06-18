@@ -41,7 +41,6 @@ app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   // console.log(err);
   const { statusCode = 500, message } = err;
-  console.log(err);
   res
     .status(statusCode)
     .send({
