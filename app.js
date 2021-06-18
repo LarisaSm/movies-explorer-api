@@ -7,7 +7,7 @@ const { errors } = require('celebrate');
 
 const { BASE_URL, NODE_ENV } = process.env;
 
-const { PORT = 3005 } = process.env;
+const { PORT = 3000 } = process.env;
 
 const indexRouter = require('./routes/index');
 
