@@ -53,12 +53,12 @@ const userSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    required: [true, 'Поле обязательное'],
   },
   movieId: {
     type: Number,
     ref: 'movie',
-    required: true,
+    required: [true, 'Поле обязательное'],
   },
   nameRU:
   {
@@ -70,6 +70,7 @@ const userSchema = new mongoose.Schema({
     type: String, // имя — это строка
     required: [true, 'Поле обязательное'], // оно должно быть у каждого пользователя, так что имя — обязательное поле
   },
+
 });
 
 exports.Movie = mongoose.model('movie', userSchema);

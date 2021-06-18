@@ -7,7 +7,7 @@ const { errors } = require('celebrate');
 
 const { BASE_URL, NODE_ENV } = process.env;
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3005 } = process.env;
 
 const indexRouter = require('./routes/index');
 
@@ -39,7 +39,9 @@ app.use(errors());
 app.use((err, req, res, next) => {
   // это обработчик ошибки
   // если у ошибки нет статуса, выставляем 500
+  // console.log(err);
   const { statusCode = 500, message } = err;
+  console.log(err);
   res
     .status(statusCode)
     .send({

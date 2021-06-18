@@ -15,8 +15,8 @@ userRouter.get('/users/me', auth, getUsersMe);
 
 userRouter.patch('/users/me', auth, celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    email: Joi.string().required().custom((value, helpers) => {
+    name: Joi.string().min(2).max(30),
+    email: Joi.string().custom((value, helpers) => {
       if (validator.isEmail(value)) {
         return value;
       }

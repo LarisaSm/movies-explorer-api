@@ -33,45 +33,25 @@ exports.createUser = (req, res, next) => {
 exports.updateUser = (req, res, next) => {
   // PATCH /users/me — обновляет профиль
   const { name, email } = req.body;
-  if (name === undefined || email === undefined) {
-    throw new ValidationError('Введены некорректные данные');
-  }
-  // User.findByIdAndUpdate(
-  //   req.user._id,
-  //   { name, email },
-  //   // Передадим объект опций:
-  //   {
-  //     new: true, // обработчик then получит на вход обновлённую запись
-  //     runValidators: true, // данные будут валидированы перед изменением
-  //   },
-  // )
-
-  User.findById(req.user._id)
-    .then((user) => {
-      if (user.email !== email) {
-        throw new ConflictError('Неверный емейл');
-      }
-      if (!user) {
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, email },
+    // Передадим объект опций:
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+    },
+  )
+    .then((userUpdate) => {
+      if (!userUpdate) {
         throw new NotFoundError('Нет пользователя с таким id');
-      } else {
-        User.findByIdAndUpdate(
-          req.user._id,
-          { name, email },
-          // Передадим объект опций:
-          {
-            new: true, // обработчик then получит на вход обновлённую запись
-            runValidators: true, // данные будут валидированы перед изменением
-          },
-        ).then((userUpdate) => {
-          if (!userUpdate) {
-            throw new NotFoundError('Нет пользователя с таким id');
-          }
-          res.send(userUpdate);
-        });
       }
+      res.send(userUpdate);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.code === 11000) {
+        throw new ConflictError('Такой емейл уже зарегистрирован');
+      } else if (err.name === 'CastError') {
         throw new ValidationError('Введены некорректные данные');
       } else if (err.name === 'ValidationError') {
         throw new ValidationError('Введены некорректные данные');
@@ -93,7 +73,7 @@ exports.login = (req, res, next) => {
       // создадим токен
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       // вернём токен
-      res.status(200).send({ token });
+      res.status(200).send({ token, name: user.name, email: user.email });
     })
     .catch(() => next(new UnauthorizedError('Ошибка авторизации')));
 };

@@ -6,7 +6,7 @@ const ValidationError = require('../errors/ValidationError');
 
 exports.getMovies = (req, res, next) => {
   // Movie.find({}).sort({ createdAt: -1 })
-  Movie.find({}).sort({ createdAt: -1 })
+  Movie.find({}).sort({ movieId: -1 })
     .then((movies) => res.send(movies))
     .catch(next);
 };
