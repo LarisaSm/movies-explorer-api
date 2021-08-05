@@ -1,5 +1,7 @@
-# movies-explorer-api
+#  Проект: Фильмы-сервер
 
-# Api:  
-178.154.227.199  
-api.larisasm.nomoredomains.icu  
+Сервер для сохранения фильмов.
+
+**Технологический стек**
+
+Node.js
