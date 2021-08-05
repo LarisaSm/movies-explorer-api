@@ -5,3 +5,7 @@
 **Технологический стек**
 
 Node.js
+
+**Репозиторий клиентской части**
+
+https://github.com/LarisaSm/movies-explorer-frontend
