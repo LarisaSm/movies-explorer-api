@@ -2,10 +2,6 @@
 
 Сервер для сохранения фильмов. Бэкенд проекта movies-explorer. Релизован с помощью Express JS
 
-**Технологический стек**
-
-Node.js
-
 **Репозиторий клиентской части**
 
 https://github.com/LarisaSm/movies-explorer-frontend
