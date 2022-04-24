@@ -11,10 +11,10 @@ https://github.com/LarisaSm/movies-explorer-frontend
 1. Склонируйте репозиторий:
 ```
 # по https
-git clone https://github.com/lenapronina/movies-explorer-api.git
+git clone https://github.com/LarisaSm/movies-explorer-api.git
 
 # по ssh
-git@github.com:lenapronina/movies-explorer-api.git 
+git@github.com:LarisaSm/movies-explorer-api.git 
 ```
 
 2. Перейдите в директорию
